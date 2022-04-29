@@ -21,7 +21,6 @@ except:
 
 def total(func, *args,**kwargs):
     _reps = kwargs.pop('_reps', 1000)           # passed-in or efault reps
-    print(_reps)
     repslist = list(range(_reps))               # hoist(hang) range out for 2.X lists
     start = timer()
     for i in repslist:
@@ -30,5 +29,20 @@ def total(func, *args,**kwargs):
     return (elapsed,ret)
 
 
-if __name__ == '__main__':
-    print(total(pow,2,1000,))
+def bestof(func, *args, **kwargs):
+    _reps = kwargs.pop('_reps',1000)             # pop(key,default): key - 要删除的键; default - 当键 key 不存在时返回的值
+    best = 2 ** 32
+    for i in range(_reps):
+        start = timer()
+        ret = func(*args,**kwargs)
+        elapsed = timer() - start
+        if elapsed < best: best = elapsed
+    return (best, ret)
+
+
+def bestoftotal(func, *args, **kwargs):
+    _reps1 = kwargs.pop('_reps1',5)
+    return min(total(func, *args, **kwargs) for i in range(_reps1))
+
+
+
